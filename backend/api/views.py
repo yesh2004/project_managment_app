@@ -39,7 +39,7 @@ def login_view(request):
 	access_token=generate_access_token(user)
 	refresh_token=generate_refresh_token(user)
 
-	response.set_cookie(key='refreshtoken',value=refresh_token,httponly=True,secure=False, samesite=None)
+	response.set_cookie(key='refreshtoken',value=refresh_token,httponly=True,samesite=None)
 	response.data={
 	'access_token':access_token,
 	'user':serialized_user,
