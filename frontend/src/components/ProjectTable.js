@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,10 +14,12 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
+import RowForm from './RowForm.js'
+import Popup from './Popup.js'
 const useStyles = makeStyles((theme)=>({
   table: {
     minWidth: 650,
-    
+    marginBottom:'10%',
     
   },
   contaienr:{
@@ -34,23 +36,24 @@ function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
+
+const ProjectTable=({project})=>{
+  const rows = [
+  
 ];
-const ProjectTable=()=>{
 	const classes = useStyles();
+  const [openPopup, setOpenPopup] = useState(false)
+  const[tablerow,setTablerow]=useState({rows:null})
+  project.rows.map(row=>rows.push(row))
+  console.log(rows)
 	return(
     <>
 		<Grid container spacing={4} justifyContent='space-between'>
     <Grid item>
-      <Typography variant='h3'>Project title</Typography>
+      <Typography variant='h3'>{project.project_name}</Typography>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="primary" >
+        <Button variant="contained" color="primary" onClick={()=>setOpenPopup(true)} >
           <AddIcon/> Row
         </Button>
       </Grid>
@@ -59,24 +62,26 @@ const ProjectTable=()=>{
         <TableHead >
           <TableRow className={classes.tHead}>
             <TableCell>Task Name</TableCell>
-            <TableCell align="right">Assigned to</TableCell>
             <TableCell align="right">Prority</TableCell>
+            <TableCell align="right">Assigned to</TableCell>
             <TableCell align="right">status</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell align="right">Deadline</TableCell>
+            <TableCell align="right"> </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.name}>
               <TableCell component="th" scope="row">
-                {row.name}
+                {row.task_name}
               </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
+              <TableCell align="right">{row.priority}</TableCell>
+              <TableCell align="right">{row.assigned_to}</TableCell>
+              <TableCell align="right">{row.status}</TableCell>
+              <TableCell align="right">{row.deadline}</TableCell>
               <TableCell align="right">
                 <Button color="primary">
-                   <EditOutlinedIcon fontSize="small" />
+                   <EditOutlinedIcon fontSize="small" onClick={()=>setOpenPopup(true)} />
                 </Button>
                 <Button color="secondary">
                   <CloseIcon fontSize="small" />
@@ -86,6 +91,9 @@ const ProjectTable=()=>{
           ))}
         </TableBody>
       </Table>
+      <Popup openPopup={openPopup} setOpenPopup={setOpenPopup}>
+    <RowForm/>
+    </Popup>
       </>
     
     

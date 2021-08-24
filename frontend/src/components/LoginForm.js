@@ -67,6 +67,7 @@ const LoginForm=()=>{
         
         console.log(res.data)
         localStorage.setItem('access_token',res.data.access_token)
+        history.push('/dashboard');
         
       });
   };

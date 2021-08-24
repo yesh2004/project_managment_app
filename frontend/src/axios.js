@@ -17,5 +17,6 @@ const axiosInstance = axios.create({
 		'X-CSRFToken': token? token:'',
 		'Authorization': localStorage.getItem('access_token')?'Token'+' '+localStorage.getItem('access_token'):'',
 	}, 
+	withCredentials: true
 });
 export default axiosInstance

@@ -14,18 +14,19 @@ const useStyles = makeStyles((theme)=>({
 }));
 const Dashboard=()=>{
 	const [openPopup, setOpenPopup] = useState(false)
-	const[projects,setProjects]=useState(null)
+	const[projects,setProjects]=useState({projects:null})
 	useEffect(()=>{
 		axiosInstance.get('/project').then(res=>{
 			
 			let allProject=res.data
-			setProjects(allProject)
-			
+			console.log(res.data)
+			setProjects({projects:allProject})
+			console.log(projects)
 		}
 			).catch(err=>console.log(err))
 	},[setProjects])
 	const classes = useStyles();
-	projects.map(project=>console.log(project))
+	
 	return(
 		<>
 		<Container className={classes.contaienr}>
@@ -34,7 +35,8 @@ const Dashboard=()=>{
 		  <AddIcon/>
 		
 		</Button>
-		<ProjectTable/>
+		{projects.projects?projects.projects.map(project=>(<ProjectTable key={project.id} project={project}/>)):''}
+		
 		</Container>
 		<Popup openPopup={openPopup} setOpenPopup={setOpenPopup}>
 		<ProjectForm/>
