@@ -3,11 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import AddIcon from '@material-ui/icons/Add';
@@ -32,9 +29,7 @@ const useStyles = makeStyles((theme)=>({
   }
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+
 
 
 const ProjectTable=({project})=>{
@@ -43,9 +38,12 @@ const ProjectTable=({project})=>{
 ];
 	const classes = useStyles();
   const [openPopup, setOpenPopup] = useState(false)
-  const[tablerow,setTablerow]=useState({rows:null})
+  const projectId=project.id
+  const[tablerow,setTablerow]=useState(project.rows)
   project.rows.map(row=>rows.push(row))
-  console.log(rows)
+ 
+  
+  console.log('Row State',tablerow)
 	return(
     <>
 		<Grid container spacing={4} justifyContent='space-between'>
@@ -53,7 +51,7 @@ const ProjectTable=({project})=>{
       <Typography variant='h3'>{project.project_name}</Typography>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="primary" onClick={()=>setOpenPopup(true)} >
+        <Button variant="contained" color="primary" value={project.id} onClick={()=>setOpenPopup(true)} >
           <AddIcon/> Row
         </Button>
       </Grid>
@@ -70,7 +68,7 @@ const ProjectTable=({project})=>{
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {tablerow.map((row) => (
             <TableRow key={row.name}>
               <TableCell component="th" scope="row">
                 {row.task_name}
@@ -92,7 +90,7 @@ const ProjectTable=({project})=>{
         </TableBody>
       </Table>
       <Popup openPopup={openPopup} setOpenPopup={setOpenPopup}>
-    <RowForm/>
+    <RowForm id={projectId} rows={rows}/>
     </Popup>
       </>
     

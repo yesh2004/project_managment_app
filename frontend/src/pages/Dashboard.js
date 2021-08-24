@@ -21,9 +21,10 @@ const Dashboard=()=>{
 			let allProject=res.data
 			console.log(res.data)
 			setProjects({projects:allProject})
-			console.log(projects)
+			
 		}
 			).catch(err=>console.log(err))
+		console.log(projects)
 	},[setProjects])
 	const classes = useStyles();
 	

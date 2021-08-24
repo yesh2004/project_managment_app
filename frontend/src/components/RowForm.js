@@ -1,16 +1,11 @@
-import React from 'react'
-
+import React,{useState} from 'react'
+import axiosInstance from '../axios.js'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import MenuItem from '@material-ui/core/MenuItem';
-
-import Typography from '@material-ui/core/Typography';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +27,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-const LoginForm=()=>{
+const RowForm=({id,rows})=>{
+  
 	const prorityOption=[
         {
           value:"Low",
@@ -43,11 +39,46 @@ const LoginForm=()=>{
           label:"Meduim"
         },
         {
-          value:"Low",
-          label:"Low"
+          value:"High",
+          label:"High"
         }
   ]
 	 const classes = useStyles();
+   const history=useHistory()
+   const initialFormData = Object.freeze({
+    priority: '',
+    task_name: '',
+    assigned_to:'',
+    deadline:'',
+  });
+   const [formData, updateFormData] = useState(initialFormData);
+
+  const handleChange = (e) => {
+    updateFormData({
+      ...formData,
+      [e.target.name]: e.target.value.trim(),
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+    axiosInstance
+      .post(`project/row_add/${id}`, {
+        priority: formData.priority,
+        task_name: formData.task_name,
+        assigned_to:formData.assigned_to,
+        deadline:formData.deadline
+
+      })
+      .then((res) => {
+        
+        console.log(res.data)
+       
+        history.push('/dashboard');
+        
+      }).catch(err=>console.log(err));
+  };
 	 return(
 	 	<Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -61,10 +92,10 @@ const LoginForm=()=>{
             required
             fullWidth
 
-            id="prority"
-            label="Prority"
-            name="prority"
-         
+            id="priority"
+            label="Priority"
+            name="priority"
+            onChange={handleChange}
             autoFocus
           >
           {prorityOption.map(option=>(
@@ -82,7 +113,7 @@ const LoginForm=()=>{
             label="TaskName"
             type="text"
             id="task_name"
-            
+            onChange={handleChange}
           />
           <TextField
             variant="outlined"
@@ -93,18 +124,18 @@ const LoginForm=()=>{
             label="Assigned To"
             type="text"
             id="assigned_to"
-            
+            onChange={handleChange}
           />
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            name="assigned_to"
-            label="Assigned To"
-            type="date"
-            id="assigned_to"
+            name="deadline"
             
+            type="date"
+            id="deadline"
+             onChange={handleChange}
           />
           <Button
             type="submit"
@@ -112,8 +143,9 @@ const LoginForm=()=>{
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSubmit}
           >
-            Sign In
+            Add a new row
           </Button>
           
         </form>
@@ -124,4 +156,4 @@ const LoginForm=()=>{
     </Container>
 	 	)
 }
-export default LoginForm
+export default RowForm
