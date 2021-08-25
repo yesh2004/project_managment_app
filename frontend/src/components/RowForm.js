@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-const RowForm=({id,rows})=>{
+const RowForm=({id,rows,editFormData,edit})=>{
   
 	const prorityOption=[
         {
@@ -45,12 +45,24 @@ const RowForm=({id,rows})=>{
   ]
 	 const classes = useStyles();
    const history=useHistory()
-   const initialFormData = Object.freeze({
+   let initialFormData;
+   if(edit){
+    
+    initialFormData = Object.freeze({
+      priority:editFormData.priority,
+      task_name:editFormData.task_name,
+      assigned_to:editFormData.assigned_to,
+      deadline:editFormData.deadline,
+    })
+   }else{
+    initialFormData = Object.freeze({
     priority: '',
     task_name: '',
     assigned_to:'',
     deadline:'',
   });
+   }
+   
    const [formData, updateFormData] = useState(initialFormData);
 
   const handleChange = (e) => {
@@ -62,9 +74,14 @@ const RowForm=({id,rows})=>{
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-
+    let Url;
+    if(edit){
+      Url=`row/${editFormData.id}`
+    }else{
+      Url=`project/row_add/${id}`
+    }
     axiosInstance
-      .post(`project/row_add/${id}`, {
+      .post(Url, {
         priority: formData.priority,
         task_name: formData.task_name,
         assigned_to:formData.assigned_to,
@@ -91,7 +108,7 @@ const RowForm=({id,rows})=>{
             select
             required
             fullWidth
-
+            defaultValue={edit?editFormData.priority:''}
             id="priority"
             label="Priority"
             name="priority"
@@ -113,6 +130,7 @@ const RowForm=({id,rows})=>{
             label="TaskName"
             type="text"
             id="task_name"
+            defaultValue={edit?editFormData.task_name:''}
             onChange={handleChange}
           />
           <TextField
@@ -124,6 +142,7 @@ const RowForm=({id,rows})=>{
             label="Assigned To"
             type="text"
             id="assigned_to"
+            defaultValue={edit?editFormData.assigned_to:''}
             onChange={handleChange}
           />
           <TextField
@@ -132,7 +151,7 @@ const RowForm=({id,rows})=>{
             required
             fullWidth
             name="deadline"
-            
+            defaultValue={edit?editFormData.deadline:''}
             type="date"
             id="deadline"
              onChange={handleChange}
@@ -145,7 +164,7 @@ const RowForm=({id,rows})=>{
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Add a new row
+           {edit? 'Edit Row':'Add a new row'}
           </Button>
           
         </form>

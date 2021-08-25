@@ -40,6 +40,8 @@ const ProjectTable=({project})=>{
   const [openPopup, setOpenPopup] = useState(false)
   const projectId=project.id
   const[tablerow,setTablerow]=useState(project.rows)
+  const[edit,setEdit]=useState(false)
+  const[editFormData,setEditFormData]=useState(null)
   project.rows.map(row=>rows.push(row))
  
   
@@ -51,7 +53,7 @@ const ProjectTable=({project})=>{
       <Typography variant='h3'>{project.project_name}</Typography>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="primary" value={project.id} onClick={()=>setOpenPopup(true)} >
+        <Button variant="contained" color="primary" value={project.id} onClick={()=>{setOpenPopup(true);setEdit(false)}} >
           <AddIcon/> Row
         </Button>
       </Grid>
@@ -79,7 +81,7 @@ const ProjectTable=({project})=>{
               <TableCell align="right">{row.deadline}</TableCell>
               <TableCell align="right">
                 <Button color="primary">
-                   <EditOutlinedIcon fontSize="small" onClick={()=>setOpenPopup(true)} />
+                   <EditOutlinedIcon fontSize="small" onClick={()=>{setOpenPopup(true);setEdit(true);setEditFormData(row)}} />
                 </Button>
                 <Button color="secondary">
                   <CloseIcon fontSize="small" />
@@ -90,7 +92,7 @@ const ProjectTable=({project})=>{
         </TableBody>
       </Table>
       <Popup openPopup={openPopup} setOpenPopup={setOpenPopup}>
-    <RowForm id={projectId} rows={rows}/>
+    <RowForm id={projectId} rows={rows} edit={edit} editFormData={editFormData}/>
     </Popup>
       </>
     
