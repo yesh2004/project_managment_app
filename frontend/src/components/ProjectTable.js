@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import RowForm from './RowForm.js'
 import Popup from './Popup.js'
+import DeletePopup from './DeletePopup.js'
 const useStyles = makeStyles((theme)=>({
   table: {
     minWidth: 650,
@@ -38,10 +39,12 @@ const ProjectTable=({project})=>{
 ];
 	const classes = useStyles();
   const [openPopup, setOpenPopup] = useState(false)
+  const [openDeletePopup, setOpenDeletePopup] = useState(false)
   const projectId=project.id
   const[tablerow,setTablerow]=useState(project.rows)
   const[edit,setEdit]=useState(false)
   const[editFormData,setEditFormData]=useState(null)
+  const[deleteId,setDeleteId]=useState(null)
   project.rows.map(row=>rows.push(row))
  
   
@@ -84,7 +87,9 @@ const ProjectTable=({project})=>{
                    <EditOutlinedIcon fontSize="small" onClick={()=>{setOpenPopup(true);setEdit(true);setEditFormData(row)}} />
                 </Button>
                 <Button color="secondary">
-                  <CloseIcon fontSize="small" />
+                  <CloseIcon fontSize="small" onClick={()=>{
+                    setOpenDeletePopup(true);
+                    setDeleteId(row.id)}} />
                 </Button>
               </TableCell>
             </TableRow>
@@ -94,6 +99,8 @@ const ProjectTable=({project})=>{
       <Popup openPopup={openPopup} setOpenPopup={setOpenPopup}>
     <RowForm id={projectId} rows={rows} edit={edit} editFormData={editFormData}/>
     </Popup>
+    
+    <DeletePopup openPopup={openDeletePopup} setOpenPopup={setOpenDeletePopup} rowId={deleteId}/>
       </>
     
     
